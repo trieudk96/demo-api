@@ -28,17 +28,17 @@ namespace DemoApi.Controllers
         {
             dynamic res = new ExpandoObject();
             var total = _context.Users.Count();
-            res.total_count = total;
-
             var startIndex = pageSize * (pageIndex - 1);
             var segments = startIndex + pageSize < total ? pageSize : total - startIndex;
-            res.payload =
-                _context.Users.Where(s => string.IsNullOrEmpty(searchString) || (
-                    !string.IsNullOrEmpty(s.UserName) && s.UserName.Contains(searchString) ||
-                    !string.IsNullOrEmpty(s.Name) && s.Name.Contains(searchString) ||
-                    s.Age.ToString().Contains(searchString) ||
-                    !string.IsNullOrEmpty(s.Gender) && s.Gender.Contains(searchString)))
-                    .Skip(startIndex).Take(segments).ToList();
+            var data =
+            _context.Users.Where(s => string.IsNullOrEmpty(searchString) || (
+                !string.IsNullOrEmpty(s.UserName) && s.UserName.Contains(searchString) ||
+                !string.IsNullOrEmpty(s.Name) && s.Name.Contains(searchString) ||
+                s.Age.ToString().Contains(searchString) ||
+                !string.IsNullOrEmpty(s.Gender) && s.Gender.Contains(searchString)))
+                .Skip(startIndex).Take(segments).ToList();
+            res.payload = data;
+            res.total_count = data.Count;
             return res;
         }
         //[HttpGet]
