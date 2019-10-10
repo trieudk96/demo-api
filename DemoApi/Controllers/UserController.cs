@@ -36,8 +36,8 @@ namespace DemoApi.Controllers
                                               !string.IsNullOrEmpty(s.Gender) && s.Gender.Contains(searchString)));
             var total = data.Count();
             var startIndex = pageSize * (pageIndex - 1);
-            var segments = startIndex + pageSize < total ? pageSize : total - startIndex;
-            res.payload = data.Skip(startIndex).Take(segments).ToList(); ;
+            var offset = startIndex + pageSize < total ? pageSize : total - startIndex;
+            res.payload = data.Skip(startIndex).Take(offset).ToList(); ;
 
             res.total_count = total;
             return res;
