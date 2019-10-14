@@ -57,16 +57,33 @@ namespace DemoApi.Controllers
             //}
             return _context.SaveChanges() > 0;
         }
+        //[HttpPost]
+        //public ActionResult<User> Add([FromBody]User user)
+        //{
+        //    //var userAdding = _context.Users.FirstOrDefault(x => x.UserName.Equals(user.UserName));
+        //    //if (userAdding != null) return null;
+        //    user.Id = _context.Users.OrderBy(x => x.Id).Last().Id + 1;
+        //    _context.Users.Add(user);
+        //    _context.SaveChanges();
+        //    return user;
+        //}
+
         [HttpPost]
-        public ActionResult<User> Add([FromBody]User user)
+        public ActionResult<User> Add([FromQuery]string name,[FromQuery]string userName,[FromQuery]int age,[FromQuery]string gender)
         {
-            //var userAdding = _context.Users.FirstOrDefault(x => x.UserName.Equals(user.UserName));
-            //if (userAdding != null) return null;
-            user.Id = _context.Users.OrderBy(x => x.Id).Last().Id + 1;
+            var user = new User
+            {
+                Name = name,
+                UserName = userName,
+                Age = age,
+                Gender = gender,
+                Id = _context.Users.OrderBy(x => x.Id).Last().Id + 1
+            };
             _context.Users.Add(user);
             _context.SaveChanges();
             return user;
         }
+
 
         [HttpPut]
         public ActionResult<User> Update([FromBody]User user)
