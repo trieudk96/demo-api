@@ -44,14 +44,17 @@ namespace DemoApi.Controllers
         //    return _context.Users.AsNoTracking().ToList();
         //}
         [HttpDelete]
-        public ActionResult<bool> Delete([FromQuery]int[] id)
+        public ActionResult<bool> Delete(int id)
         {
-            foreach (var itemId in id)
-            {
-                var item = _context.Users.FirstOrDefault(s => s.Id.Equals(itemId));
-                if (item == null) return NotFound();
-                _context.Users.Remove(item);
-            }
+            var item = _context.Users.FirstOrDefault(s => s.Id.Equals(id));
+            if (item == null) return NotFound();
+            _context.Users.Remove(item);
+            //foreach (var itemId in id)
+            //{
+            //    var item = _context.Users.FirstOrDefault(s => s.Id.Equals(itemId));
+            //    if (item == null) return NotFound();
+            //    _context.Users.Remove(item);
+            //}
             return _context.SaveChanges() > 0;
         }
         [HttpPost]
