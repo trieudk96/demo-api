@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Threading.Tasks;
-using DemoApi.Database;
+﻿using DemoApi.Database;
 using DemoApi.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Dynamic;
+using System.Linq;
 
 namespace DemoApi.Controllers
 {
@@ -27,7 +23,7 @@ namespace DemoApi.Controllers
         public ActionResult<dynamic> Get([FromQuery]int pageIndex = 1, [FromQuery]int pageSize = 10, [FromQuery]string searchString = null)
         {
             dynamic res = new ExpandoObject();
-           
+
             var data =
                 _context.Users.Where(s => string.IsNullOrEmpty(searchString) || (
                                               !string.IsNullOrEmpty(s.UserName) && s.UserName.Contains(searchString) ||
@@ -48,14 +44,38 @@ namespace DemoApi.Controllers
         //    return _context.Users.AsNoTracking().ToList();
         //}
         [HttpDelete]
-        public ActionResult<bool> Delete(int id)
+        public ActionResult<bool> Delete([FromQuery]int[] id)
         {
-            var item = _context.Users.FirstOrDefault(s => s.Id == id);
-            if (item == null) return NotFound();
-            _context.Users.Remove(item);
+            foreach (var itemId in id)
+            {
+                var item = _context.Users.FirstOrDefault(s => s.Id.Equals(itemId));
+                if (item == null) return NotFound();
+                _context.Users.Remove(item);
+            }
             return _context.SaveChanges() > 0;
         }
+        [HttpPost]
+        public ActionResult<User> Add([FromBody]User user)
+        {
+            //var userAdding = _context.Users.FirstOrDefault(x => x.UserName.Equals(user.UserName));
+            //if (userAdding != null) return null;
+            user.Id = _context.Users.OrderBy(x => x.Id).Last().Id + 1;
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return user;
+        }
 
-
+        [HttpPut]
+        public ActionResult<User> Update([FromBody]User user)
+        {
+            var userUpdating = _context.Users.FirstOrDefault(x => x.Id.Equals(user.Id));
+            if (userUpdating == null) return null;
+            userUpdating.Age = user.Age;
+            userUpdating.Name = user.Name;
+            userUpdating.UserName = user.UserName;
+            userUpdating.Gender = user.Gender;
+            _context.SaveChanges();
+            return userUpdating;
+        }
     }
 }
