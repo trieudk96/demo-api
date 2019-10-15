@@ -19,7 +19,6 @@ namespace DemoApi.Controllers
             _context = context;
         }
         [HttpGet]
-        //
         public ActionResult<dynamic> Get([FromQuery]int pageIndex = 1, [FromQuery]int pageSize = 10, [FromQuery]string searchString = null)
         {
             dynamic res = new ExpandoObject();
@@ -38,35 +37,15 @@ namespace DemoApi.Controllers
             res.total_count = total;
             return res;
         }
-        //[HttpGet]
-        //public ActionResult<IEnumerable<User>> GetAll()
-        //{
-        //    return _context.Users.AsNoTracking().ToList();
-        //}
+
         [HttpDelete]
         public ActionResult<bool> Delete(int id)
         {
             var item = _context.Users.FirstOrDefault(s => s.Id.Equals(id));
             if (item == null) return NotFound();
             _context.Users.Remove(item);
-            //foreach (var itemId in id)
-            //{
-            //    var item = _context.Users.FirstOrDefault(s => s.Id.Equals(itemId));
-            //    if (item == null) return NotFound();
-            //    _context.Users.Remove(item);
-            //}
             return _context.SaveChanges() > 0;
         }
-        //[HttpPost]
-        //public ActionResult<User> Add([FromBody]User user)
-        //{
-        //    //var userAdding = _context.Users.FirstOrDefault(x => x.UserName.Equals(user.UserName));
-        //    //if (userAdding != null) return null;
-        //    user.Id = _context.Users.OrderBy(x => x.Id).Last().Id + 1;
-        //    _context.Users.Add(user);
-        //    _context.SaveChanges();
-        //    return user;
-        //}
 
         [HttpPost]
         public ActionResult<User> Add([FromQuery]string name,[FromQuery]string userName,[FromQuery]int age,[FromQuery]string gender)
@@ -83,20 +62,6 @@ namespace DemoApi.Controllers
             _context.SaveChanges();
             return user;
         }
-
-
-        //[HttpPut]
-        //public ActionResult<User> Update([FromBody]User user)
-        //{
-        //    var userUpdating = _context.Users.FirstOrDefault(x => x.Id.Equals(user.Id));
-        //    if (userUpdating == null) return null;
-        //    userUpdating.Age = user.Age;
-        //    userUpdating.Name = user.Name;
-        //    userUpdating.UserName = user.UserName;
-        //    userUpdating.Gender = user.Gender;
-        //    _context.SaveChanges();
-        //    return userUpdating;
-        //}
 
         [HttpPut]
         public ActionResult<User> Update([FromQuery]int id, [FromQuery]string name, [FromQuery]string userName, [FromQuery]int age, [FromQuery]string gender)
