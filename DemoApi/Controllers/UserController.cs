@@ -85,15 +85,28 @@ namespace DemoApi.Controllers
         }
 
 
+        //[HttpPut]
+        //public ActionResult<User> Update([FromBody]User user)
+        //{
+        //    var userUpdating = _context.Users.FirstOrDefault(x => x.Id.Equals(user.Id));
+        //    if (userUpdating == null) return null;
+        //    userUpdating.Age = user.Age;
+        //    userUpdating.Name = user.Name;
+        //    userUpdating.UserName = user.UserName;
+        //    userUpdating.Gender = user.Gender;
+        //    _context.SaveChanges();
+        //    return userUpdating;
+        //}
+
         [HttpPut]
-        public ActionResult<User> Update([FromBody]User user)
+        public ActionResult<User> Update([FromQuery]int id, [FromQuery]string name, [FromQuery]string userName, [FromQuery]int age, [FromQuery]string gender)
         {
-            var userUpdating = _context.Users.FirstOrDefault(x => x.Id.Equals(user.Id));
+            var userUpdating = _context.Users.FirstOrDefault(x => x.Id.Equals(id));
             if (userUpdating == null) return null;
-            userUpdating.Age = user.Age;
-            userUpdating.Name = user.Name;
-            userUpdating.UserName = user.UserName;
-            userUpdating.Gender = user.Gender;
+            userUpdating.Age = age;
+            userUpdating.Name = name;
+            userUpdating.UserName = userName;
+            userUpdating.Gender = gender;
             _context.SaveChanges();
             return userUpdating;
         }
